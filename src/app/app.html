@@ -1,0 +1,331 @@
+<header class="site-header">
+  <a class="brand" href="#top" [attr.aria-label]="content.brandAriaLabel">
+    <span class="brand-mark">
+      @if (!brandImageFailed()) {
+        <img [src]="content.brandImageUrl" [alt]="content.brandImageAlt" (error)="markBrandImageFailed()" />
+      }
+      <span>VJ</span>
+    </span>
+    <span class="brand-copy">
+      <strong>{{ agencyName }}</strong>
+      <small>Kocani</small>
+    </span>
+  </a>
+
+  <nav class="primary-nav" [attr.aria-label]="content.navAriaLabel">
+    @for (item of content.navItems; track item.target) {
+      <a [href]="'#' + item.target">{{ item.label }}</a>
+    }
+  </nav>
+
+  <div class="header-actions">
+    <div class="language-toggle" [attr.aria-label]="content.languageLabel">
+      @for (language of languages; track language.code) {
+        <button
+          type="button"
+          [class.active]="currentLanguage() === language.code"
+          [attr.aria-pressed]="currentLanguage() === language.code"
+          (click)="setLanguage(language.code)"
+        >
+          {{ language.label }}
+        </button>
+      }
+    </div>
+    <a class="header-cta" [href]="inquiryLink()">{{ content.contactAgency }}</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <div class="hero-copy">
+        <p class="eyebrow">{{ content.heroEyebrow }}</p>
+        <h1 id="hero-title">{{ content.heroTitle }}</h1>
+        <p>{{ content.heroDescription }}</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#featured-offers">{{ content.viewOffers }}</a>
+          <a class="button secondary" [href]="facebookUrl" target="_blank" rel="noreferrer">{{ content.facebookCta }}</a>
+        </div>
+      </div>
+
+      <aside class="hero-panel" [attr.aria-label]="content.socialProofLabel">
+        <span>{{ content.socialProofLabel }}</span>
+        <div class="hero-stats">
+          @for (stat of content.heroStats; track stat.label) {
+            <div>
+              <strong>{{ stat.value }}</strong>
+              <small>{{ stat.label }}</small>
+            </div>
+          }
+        </div>
+        <div class="quick-jumps" [attr.aria-label]="content.quickJumpLabel">
+          <strong>{{ content.quickJumpLabel }}</strong>
+          <div>
+            @for (item of content.navItems; track item.target) {
+              <a [href]="'#' + item.target">{{ item.label }}</a>
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="featured-offers" id="featured-offers" aria-labelledby="featured-offers-title">
+    <div class="section-heading compact">
+      <p class="eyebrow">{{ content.viewOffers }}</p>
+      <h2 id="featured-offers-title">{{ content.featuredOffersTitle }}</h2>
+      <p>{{ content.featuredOffersDescription }}</p>
+    </div>
+
+    <div class="featured-grid">
+      @for (offer of content.featuredOffers; track offer.title) {
+        <a class="featured-offer" [href]="'#' + offer.target">
+          <span>{{ offer.label }}</span>
+          <strong>{{ offer.title }}</strong>
+          <p>{{ offer.description }}</p>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="season-strip" [attr.aria-label]="content.travelHighlightsAriaLabel">
+    @for (card of content.highlightCards; track card.title) {
+      <article>
+        <span>{{ card.label }}</span>
+        <strong>{{ card.title }}</strong>
+        <p>{{ card.description }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="section" id="summer" aria-labelledby="summer-title">
+    <div class="section-heading">
+      <p class="eyebrow">{{ content.summerEyebrow }}</p>
+      <h2 id="summer-title">{{ content.summerTitle }}</h2>
+      <p>{{ content.summerDescription }}</p>
+    </div>
+
+    <div class="destination-grid">
+      @for (destination of destinationsBySeason('summer'); track destination.name) {
+        <article class="destination-card">
+          <img [src]="destination.heroImage" [alt]="destination.alt" />
+          <div class="destination-content">
+            <span>{{ destination.country }} / {{ destination.region }}</span>
+            <h3>{{ destination.name }}</h3>
+            <p>{{ destination.description }}</p>
+            <div class="tag-list" [attr.aria-label]="destination.name + ' tags'">
+              @for (tag of destination.tags; track tag) {
+                <span>{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="package-grid" [attr.aria-label]="content.summerPackagesLabel">
+      @for (travelPackage of packagesBySeason('summer'); track travelPackage.title) {
+        <article class="package-card">
+          <div class="package-media">
+            <img [src]="travelPackage.image" [alt]="travelPackage.alt" />
+            <strong>{{ travelPackage.priceLabel }}</strong>
+          </div>
+          <div class="package-body">
+            <div class="package-meta">
+              <span>{{ travelPackage.destination }}</span>
+              <small>{{ travelPackage.dates }}</small>
+            </div>
+            <h3>{{ travelPackage.title }}</h3>
+            <dl>
+              <div>
+                <dt>{{ content.fieldLabels.duration }}</dt>
+                <dd>{{ travelPackage.duration }}</dd>
+              </div>
+              <div>
+                <dt>{{ content.fieldLabels.transport }}</dt>
+                <dd>{{ travelPackage.transportType }}</dd>
+              </div>
+              <div>
+                <dt>{{ content.fieldLabels.dates }}</dt>
+                <dd>{{ travelPackage.dates }}</dd>
+              </div>
+              <div>
+                <dt>{{ content.fieldLabels.stay }}</dt>
+                <dd>{{ travelPackage.hotelRating }}</dd>
+              </div>
+            </dl>
+            <ul>
+              @for (highlight of travelPackage.highlights; track highlight) {
+                <li>{{ highlight }}</li>
+              }
+            </ul>
+            <a class="text-link" [href]="inquiryLink(travelPackage.title)">{{ travelPackage.inquiryCta }}</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section winter-band" id="winter" aria-labelledby="winter-title">
+    <div class="section-heading">
+      <p class="eyebrow">{{ content.winterEyebrow }}</p>
+      <h2 id="winter-title">{{ content.winterTitle }}</h2>
+      <p>{{ content.winterDescription }}</p>
+    </div>
+
+    <div class="destination-grid">
+      @for (destination of destinationsBySeason('winter'); track destination.name) {
+        <article class="destination-card compact">
+          <img [src]="destination.heroImage" [alt]="destination.alt" />
+          <div class="destination-content">
+            <span>{{ destination.country }} / {{ destination.region }}</span>
+            <h3>{{ destination.name }}</h3>
+            <p>{{ destination.description }}</p>
+            <div class="tag-list" [attr.aria-label]="destination.name + ' tags'">
+              @for (tag of destination.tags; track tag) {
+                <span>{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="package-grid two-column" [attr.aria-label]="content.winterPackagesLabel">
+      @for (travelPackage of packagesBySeason('winter'); track travelPackage.title) {
+        <article class="package-card horizontal">
+          <div class="package-media">
+            <img [src]="travelPackage.image" [alt]="travelPackage.alt" />
+            <strong>{{ travelPackage.priceLabel }}</strong>
+          </div>
+          <div class="package-body">
+            <div class="package-meta">
+              <span>{{ travelPackage.destination }}</span>
+              <small>{{ travelPackage.dates }}</small>
+            </div>
+            <h3>{{ travelPackage.title }}</h3>
+            <p>{{ travelPackage.duration }} / {{ travelPackage.transportType }} / {{ travelPackage.dates }}</p>
+            <a class="text-link" [href]="inquiryLink(travelPackage.title)">{{ travelPackage.inquiryCta }}</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section" id="exotic" aria-labelledby="exotic-title">
+    <div class="split-section">
+      <div class="section-heading">
+        <p class="eyebrow">{{ content.exoticEyebrow }}</p>
+        <h2 id="exotic-title">{{ content.exoticTitle }}</h2>
+        <p>{{ content.exoticDescription }}</p>
+        <a class="button primary" [href]="inquiryLink(content.exoticTitle)">{{ content.exoticCta }}</a>
+      </div>
+
+      @for (travelPackage of packagesBySeason('exotic'); track travelPackage.title) {
+        <article class="feature-panel">
+          <img [src]="travelPackage.image" [alt]="travelPackage.alt" />
+          <div>
+            <span>{{ travelPackage.destination }}</span>
+            <h3>{{ travelPackage.title }}</h3>
+            <p>{{ travelPackage.duration }} / {{ travelPackage.transportType }} / {{ travelPackage.hotelRating }}</p>
+            <div class="tag-list">
+              @for (highlight of travelPackage.highlights; track highlight) {
+                <span>{{ highlight }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section partner-section" id="partners" aria-labelledby="partners-title">
+    <div class="section-heading">
+      <p class="eyebrow">{{ content.partnersEyebrow }}</p>
+      <h2 id="partners-title">{{ content.partnersTitle }}</h2>
+      <p>{{ content.partnersDescription }}</p>
+    </div>
+
+    <div class="embed-grid">
+      @for (embed of safePartnerEmbeds(); track embed.title) {
+        <article class="embed-card">
+          <div class="embed-header">
+            <div>
+              <span>{{ embed.providerName }}</span>
+              <h3>{{ embed.title }}</h3>
+            </div>
+            <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
+              {{ content.openPartnerOffer }}
+            </a>
+          </div>
+          <p>{{ embed.description }}</p>
+          <div class="tag-list">
+            @for (tag of embed.destinationTags; track tag) {
+              <span>{{ tag }}</span>
+            }
+          </div>
+
+          @if (embed.safeUrl) {
+            <div class="iframe-shell">
+              <div class="iframe-loading">{{ content.loadingPartner }}</div>
+              <iframe
+                [src]="embed.safeUrl"
+                [title]="embed.title"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          } @else {
+            <div class="iframe-fallback" role="status">
+              <strong>{{ content.partnerUnavailable }}</strong>
+              <p>{{ embed.unavailableReason }}</p>
+              <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
+                {{ content.openPartnerOffer }}
+              </a>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="section about-section" id="about" aria-labelledby="about-title">
+    <div class="section-heading">
+      <p class="eyebrow">{{ content.aboutEyebrow }}</p>
+      <h2 id="about-title">{{ content.aboutTitle }}</h2>
+      <p>{{ content.aboutDescription }}</p>
+    </div>
+    <div class="trust-grid">
+      @for (card of content.trustCards; track card.title) {
+        <article>
+          <strong>{{ card.title }}</strong>
+          <p>{{ card.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="contact-section" id="contact" aria-labelledby="contact-title">
+    <div>
+      <p class="eyebrow">{{ content.contactEyebrow }}</p>
+      <h2 id="contact-title">{{ content.contactTitle }}</h2>
+      <p>{{ content.contactDescription }}</p>
+    </div>
+    <div class="contact-actions">
+      @for (link of content.primaryContactLinks; track link.label) {
+        <a
+          class="button"
+          [class.primary]="link.style === 'primary'"
+          [class.secondary]="link.style === 'secondary'"
+          [href]="link.href"
+          [attr.target]="link.external ? '_blank' : null"
+          [attr.rel]="link.external ? 'noreferrer' : null"
+        >
+          {{ link.label }}
+        </a>
+      }
+    </div>
+  </section>
+</main>
+
+<a class="mobile-contact" [href]="inquiryLink()">{{ content.contactAgency }}</a>
