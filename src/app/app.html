@@ -98,6 +98,56 @@
     }
   </section>
 
+  <section class="section partner-section" id="partners" aria-labelledby="partners-title">
+    <div class="section-heading">
+      <p class="eyebrow">{{ content.partnersEyebrow }}</p>
+      <h2 id="partners-title">{{ content.partnersTitle }}</h2>
+      <p>{{ content.partnersDescription }}</p>
+    </div>
+
+    <div class="embed-grid">
+      @for (embed of safePartnerEmbeds(); track embed.title) {
+        <article class="embed-card">
+          <div class="embed-header">
+            <div>
+              <span>{{ embed.providerName }}</span>
+              <h3>{{ embed.title }}</h3>
+            </div>
+            <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
+              {{ content.openPartnerOffer }}
+            </a>
+          </div>
+          <p>{{ embed.description }}</p>
+          <div class="tag-list">
+            @for (tag of embed.destinationTags; track tag) {
+              <span>{{ tag }}</span>
+            }
+          </div>
+
+          @if (embed.safeUrl) {
+            <div class="iframe-shell">
+              <div class="iframe-loading">{{ content.loadingPartner }}</div>
+              <iframe
+                [src]="embed.safeUrl"
+                [title]="embed.title"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          } @else {
+            <div class="iframe-fallback" role="status">
+              <strong>{{ content.partnerUnavailable }}</strong>
+              <p>{{ embed.unavailableReason }}</p>
+              <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
+                {{ content.openPartnerOffer }}
+              </a>
+            </div>
+          }
+        </article>
+      }
+    </div>
+  </section>
+
   <section class="section" id="summer" aria-labelledby="summer-title">
     <div class="section-heading">
       <p class="eyebrow">{{ content.summerEyebrow }}</p>
@@ -234,56 +284,6 @@
               }
             </div>
           </div>
-        </article>
-      }
-    </div>
-  </section>
-
-  <section class="section partner-section" id="partners" aria-labelledby="partners-title">
-    <div class="section-heading">
-      <p class="eyebrow">{{ content.partnersEyebrow }}</p>
-      <h2 id="partners-title">{{ content.partnersTitle }}</h2>
-      <p>{{ content.partnersDescription }}</p>
-    </div>
-
-    <div class="embed-grid">
-      @for (embed of safePartnerEmbeds(); track embed.title) {
-        <article class="embed-card">
-          <div class="embed-header">
-            <div>
-              <span>{{ embed.providerName }}</span>
-              <h3>{{ embed.title }}</h3>
-            </div>
-            <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
-              {{ content.openPartnerOffer }}
-            </a>
-          </div>
-          <p>{{ embed.description }}</p>
-          <div class="tag-list">
-            @for (tag of embed.destinationTags; track tag) {
-              <span>{{ tag }}</span>
-            }
-          </div>
-
-          @if (embed.safeUrl) {
-            <div class="iframe-shell">
-              <div class="iframe-loading">{{ content.loadingPartner }}</div>
-              <iframe
-                [src]="embed.safeUrl"
-                [title]="embed.title"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
-          } @else {
-            <div class="iframe-fallback" role="status">
-              <strong>{{ content.partnerUnavailable }}</strong>
-              <p>{{ embed.unavailableReason }}</p>
-              <a class="text-link" [href]="embed.fallbackUrl" target="_blank" rel="noreferrer">
-                {{ content.openPartnerOffer }}
-              </a>
-            </div>
-          }
         </article>
       }
     </div>

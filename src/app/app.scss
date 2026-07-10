@@ -600,6 +600,7 @@ ul {
 
 .partner-section {
   padding-top: 52px;
+  scroll-margin-top: 76px;
 }
 
 .embed-header {
@@ -610,7 +611,7 @@ ul {
 .iframe-shell,
 .iframe-fallback {
   position: relative;
-  min-height: 280px;
+  min-height: min(680px, 78vh);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -727,6 +728,14 @@ ul {
   .embed-grid,
   .trust-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .embed-card:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .embed-card:first-child .iframe-shell {
+    min-height: min(760px, 82vh);
   }
 
   .package-card.horizontal {
